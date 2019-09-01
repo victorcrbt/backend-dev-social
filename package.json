@@ -1,0 +1,9 @@
+{
+  "name": "social-dev",
+  "version": "1.0.0",
+  "description": "Personal project of a social network to enchance skills and knowledge",
+  "main": "server.js",
+  "author": "Victor Batalha",
+  "license": "MIT",
+  "private": true
+}
