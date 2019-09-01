@@ -3,6 +3,7 @@ import 'express-async-errors';
 import express from 'express';
 import Youch from 'youch';
 
+import './database';
 import routes from './routes';
 
 class App {
