@@ -28,6 +28,76 @@ class UserController {
       return res.status(500).json({ error: 'Internal server error.' });
     }
   }
+
+  async update(req, res) {
+    const { email, oldPassword, password, phone } = req.body;
+
+    const user = await User.findByPk(req.userId);
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found.' });
+    }
+
+    if (email && email !== user.email) {
+      const emailAlreadyUsed = await User.findOne({ where: { email } });
+
+      if (emailAlreadyUsed) {
+        return res.status(400).json({ error: 'The email is already used.' });
+      }
+    }
+
+    if (phone && phone !== user.phone) {
+      const phoneAlreadyUsed = await User.findOne({ where: { phone } });
+
+      if (phoneAlreadyUsed) {
+        return res.status(400).json({ error: 'The phone is already used.' });
+      }
+    }
+
+    if (password && !oldPassword) {
+      return res.status(401).json({
+        error: 'You must provide your old password to update your password.',
+      });
+    }
+
+    if (oldPassword && !(await user.checkPassword(oldPassword))) {
+      return res.status(401).json({ error: 'Your old password do not match.' });
+    }
+
+    await user.update(req.body);
+
+    const updatedUser = await User.findByPk(req.userId, {
+      attributes: {
+        exclude: ['createdAt', 'updatedAt', 'password_hash'],
+      },
+    });
+
+    return res.status(200).json(updatedUser);
+  }
+
+  async delete(req, res) {
+    const user = await User.findByPk(req.userId);
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found.' });
+    }
+
+    if (!req.body.password) {
+      return res.status(401).json({
+        error: 'You must provide your password to procceed with this action.',
+      });
+    }
+
+    if (!(await user.checkPassword(req.body.password))) {
+      return res
+        .status(401)
+        .json({ error: 'The provided password it is no correct.' });
+    }
+
+    await user.destroy();
+
+    return res.status(200).json();
+  }
 }
 
 export default new UserController();
