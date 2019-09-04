@@ -70,6 +70,12 @@ class UserController {
       attributes: {
         exclude: ['createdAt', 'updatedAt', 'password_hash'],
       },
+      include: [
+        {
+          association: 'avatar',
+          attributes: ['id', 'path', 'url'],
+        },
+      ],
     });
 
     return res.status(200).json(updatedUser);
