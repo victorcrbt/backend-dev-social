@@ -1,6 +1,33 @@
+import { Op } from 'sequelize';
+
 import User from '../models/User';
 
 class UserController {
+  async index(req, res) {
+    const where = {};
+
+    if (req.query.user) {
+      where[Op.or] = [
+        {
+          first_name: { [Op.iLike]: `%${req.query.user}%` },
+        },
+        {
+          last_name: { [Op.iLike]: `%${req.query.user}%` },
+        },
+      ];
+    }
+
+    const users = await User.findAll({ where });
+
+    const currentUserIndex = users.findIndex(user => user.id === req.userId);
+
+    if (currentUserIndex !== -1) {
+      users.splice(currentUserIndex, 1);
+    }
+
+    return res.status(200).json(users);
+  }
+
   async store(req, res) {
     const emailAlreadyUsed = await User.findOne({
       where: { email: req.body.email },
