@@ -18,6 +18,7 @@ routes.post('/sessions', SessionController.store);
 
 // Protected routes
 routes.get('/users', authMiddleware, UserController.index);
+routes.get('/users/:id', authMiddleware, UserController.show);
 routes.put('/users', authMiddleware, UserController.update);
 routes.delete('/users', authMiddleware, UserController.delete);
 

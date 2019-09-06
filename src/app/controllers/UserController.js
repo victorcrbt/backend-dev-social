@@ -1,6 +1,7 @@
 import { Op } from 'sequelize';
 
 import User from '../models/User';
+import Friend from '../schemas/Friend';
 
 class UserController {
   async index(req, res) {
@@ -26,6 +27,25 @@ class UserController {
     }
 
     return res.status(200).json(users);
+  }
+
+  async show(req, res) {
+    const { id } = req.params;
+
+    const user = await User.findByPk(id, {
+      include: [
+        {
+          association: 'avatar',
+          attributes: ['path', 'url'],
+        },
+      ],
+    });
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found.' });
+    }
+
+    return res.status(200).json(user);
   }
 
   async store(req, res) {
