@@ -2,6 +2,7 @@ import 'dotenv/config';
 import 'express-async-errors';
 import express from 'express';
 import Youch from 'youch';
+import { resolve } from 'path';
 
 import './database';
 import routes from './routes';
@@ -17,6 +18,10 @@ class App {
 
   middlewares() {
     this.server.use(express.json());
+    this.server.use(
+      '/static/avatars',
+      express.static(resolve(__dirname, '..', 'temp', 'avatars'))
+    );
   }
 
   routes() {
