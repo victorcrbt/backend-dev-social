@@ -1,4 +1,5 @@
 import Friend from '../schemas/Friend';
+import User from '../models/User';
 
 class FriendController {
   async store(req, res) {
@@ -9,6 +10,14 @@ class FriendController {
       return res
         .status(400)
         .json({ error: 'You cannot add yourself as a friend.' });
+    }
+
+    const targetUserExists = await User.findByPk(targetUser);
+
+    if (!targetUserExists) {
+      return res
+        .status(404)
+        .json({ error: 'The requested user does not exist.' });
     }
 
     let user = await Friend.findOne({ user_id: loggedUser });
