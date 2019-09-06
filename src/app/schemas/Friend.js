@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const FriendSchema = new mongoose.Schema({
   user_id: {
-    type: String,
+    type: Number,
     required: true,
     unique: true,
   },

@@ -1,7 +1,6 @@
 import { Op } from 'sequelize';
 
 import User from '../models/User';
-import Friend from '../schemas/Friend';
 
 class UserController {
   async index(req, res) {
