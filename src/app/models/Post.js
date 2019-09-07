@@ -5,6 +5,7 @@ class Post extends Model {
     super.init(
       {
         content: Sequelize.TEXT,
+        likes: Sequelize.ARRAY(Sequelize.INTEGER),
       },
       {
         sequelize,
