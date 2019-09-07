@@ -17,6 +17,16 @@ class PostController {
           where: {
             user_id: user,
           },
+          include: [
+            {
+              association: 'comments',
+              include: [
+                {
+                  association: 'user',
+                },
+              ],
+            },
+          ],
         });
       })
     );
