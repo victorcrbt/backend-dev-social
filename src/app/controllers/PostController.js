@@ -3,10 +3,14 @@ import Friends from '../schemas/Friend';
 
 class PostController {
   async index(req, res) {
-    const { friend_list } = await Friends.findOne({ user_id: req.userId });
+    const friends = await Friends.findOne({ user_id: req.userId });
+
+    let users = [req.userId];
 
     // Get all friends and own user_id.
-    const users = [...friend_list, req.userId];
+    if (friends && friends.friend_list) {
+      users = [...users, ...friends.friend_list];
+    }
 
     /**
      * 'postList' is an array of array of posts.
