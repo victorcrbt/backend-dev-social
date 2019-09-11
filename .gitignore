@@ -6,3 +6,4 @@ temp/images/*
 temp/avatars/*
 !temp/images/.gitkeep
 !temp/avatars/.gitkeep
+!temp/avatars/default.png
