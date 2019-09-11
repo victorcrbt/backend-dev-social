@@ -17,7 +17,18 @@ class UserController {
       ];
     }
 
-    const users = await User.findAll({ where });
+    const users = await User.findAll({
+      where,
+      attributes: {
+        exclude: ['password_hash', 'createdAt', 'updatedAt'],
+      },
+      include: [
+        {
+          association: 'avatar',
+          attributes: ['path', 'url'],
+        },
+      ],
+    });
 
     const currentUserIndex = users.findIndex(user => user.id === req.userId);
 
