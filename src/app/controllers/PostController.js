@@ -67,7 +67,30 @@ class PostController {
   async store(req, res) {
     const { content } = req.body;
 
-    const post = await Post.create({ user_id: req.userId, content });
+    const { id } = await Post.create({ user_id: req.userId, content, likes: [] });
+
+    const post = await Post.findByPk(id, {
+      include: [
+        {
+          association: 'comments',
+          include: [
+            {
+              association: 'user',
+            },
+          ],
+        },
+        {
+          association: 'user',
+          attributes: ['id', 'first_name', 'last_name', 'avatar_id'],
+          include: [
+            {
+              association: 'avatar',
+              attributes: ['url', 'path'],
+            },
+          ],
+        },
+      ],
+    })
 
     return res.status(201).json(post);
   }
