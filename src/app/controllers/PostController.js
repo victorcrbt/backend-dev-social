@@ -30,6 +30,16 @@ class PostController {
                 },
               ],
             },
+            {
+              association: 'user',
+              attributes: ['id', 'first_name', 'last_name', 'avatar_id'],
+              include: [
+                {
+                  association: 'avatar',
+                  attributes: ['url', 'path'],
+                },
+              ],
+            },
           ],
         });
       })
