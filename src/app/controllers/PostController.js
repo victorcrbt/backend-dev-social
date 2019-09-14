@@ -27,6 +27,20 @@ class PostController {
               include: [
                 {
                   association: 'user',
+                  attributes: {
+                    exclude: [
+                      'password_hash',
+                      'createdAt',
+                      'updatedAt',
+                      'email',
+                    ],
+                  },
+                  include: [
+                    {
+                      association: 'avatar',
+                      attributes: ['path', 'url'],
+                    },
+                  ],
                 },
               ],
             },
@@ -67,7 +81,11 @@ class PostController {
   async store(req, res) {
     const { content } = req.body;
 
-    const { id } = await Post.create({ user_id: req.userId, content, likes: [] });
+    const { id } = await Post.create({
+      user_id: req.userId,
+      content,
+      likes: [],
+    });
 
     const post = await Post.findByPk(id, {
       include: [
@@ -90,7 +108,7 @@ class PostController {
           ],
         },
       ],
-    })
+    });
 
     return res.status(201).json(post);
   }
