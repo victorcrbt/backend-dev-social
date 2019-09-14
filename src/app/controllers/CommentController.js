@@ -14,7 +14,24 @@ class CommentController {
     }
 
     try {
-      const comment = await Comment.create({ content, user_id, post_id });
+      const { id } = await Comment.create({ content, user_id, post_id });
+
+      const comment = await Comment.findByPk(id, {
+        include: [
+          {
+            association: 'user',
+            attributes: {
+              exclude: ['password_hash', 'createdAt', 'updatedAt'],
+            },
+            include: [
+              {
+                association: 'avatar',
+                attributes: ['path', 'url'],
+              },
+            ],
+          },
+        ],
+      });
 
       return res.status(201).json(comment);
     } catch (err) {
