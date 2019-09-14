@@ -36,6 +36,7 @@ routes.post('/posts', PostController.store);
 routes.put('/posts/:postId', PostController.update);
 routes.delete('/posts/:postId', PostController.delete);
 
+routes.get('/likes/:postId', LikeController.index);
 routes.post('/posts/:postId/like', LikeController.store);
 routes.delete('/posts/:postId/dislike', LikeController.delete);
 

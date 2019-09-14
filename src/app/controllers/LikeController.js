@@ -1,6 +1,18 @@
 import Post from '../models/Post';
 
 class LikeController {
+  async index(req, res) {
+    const { postId } = req.params;
+
+    const post = await Post.findByPk(postId);
+
+    if (!post) {
+      return res.status(404).json({ error: 'Post not found.' });
+    }
+
+    return res.status(200).json({ likes: post.likes });
+  }
+
   async store(req, res) {
     const { postId } = req.params;
 
