@@ -52,38 +52,62 @@ class FriendController {
   }
 
   async delete(req, res) {
-    const loggedUser = req.userId;
-    const targetUser = Number(req.params.id);
+    const loggedUserId = req.userId;
+    const targetUserId = Number(req.params.id);
 
-    if (loggedUser === targetUser) {
+    async function removeFriendFromTargetUser(targetUser) {
+      const targetFriendIndex = targetUser.friend_list.findIndex(
+        friend => friend === loggedUserId
+      );
+
+      if (targetFriendIndex === -1) {
+        return res.status(200).json();
+      }
+
+      targetUser.friend_list.splice(targetFriendIndex, 1);
+
+      await targetUser.save();
+
+      return res.status(200).json();
+    }
+
+    if (loggedUserId === targetUserId) {
       return res
         .status(400)
         .json({ error: 'You cannot add yourself as a friend.' });
     }
 
-    const user = await Friend.findOne({ user_id: loggedUser });
+    const loggedUser = await Friend.findOne({ user_id: loggedUserId });
 
-    if (!user) {
+    if (!loggedUser) {
       return res
         .status(400)
         .json({ error: 'You currently do not have any friends.' });
     }
 
-    const friendIndex = user.friend_list.findIndex(
-      friend => friend === targetUser
+    const loggedFriendIndex = loggedUser.friend_list.findIndex(
+      friend => friend === targetUserId
     );
 
-    if (friendIndex === -1) {
+    if (loggedFriendIndex === -1) {
       return res
         .status(400)
         .json({ error: 'You do not have this user added as a friend.' });
     }
 
-    user.friend_list.splice(friendIndex, 1);
+    loggedUser.friend_list.splice(loggedFriendIndex, 1);
 
-    user.save();
+    await loggedUser.save();
 
-    return res.status(200).json(user);
+    const targetUser = await Friend.findOne({ user_id: targetUserId });
+
+    if (!targetUser) {
+      return res.status(200).json();
+    }
+
+    removeFriendFromTargetUser(targetUser);
+
+    return res.status(200).json();
   }
 }
 
