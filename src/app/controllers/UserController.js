@@ -1,6 +1,7 @@
 import { Op } from 'sequelize';
 
 import User from '../models/User';
+import Friend from '../schemas/Friend';
 
 class UserController {
   async index(req, res) {
@@ -40,9 +41,16 @@ class UserController {
   }
 
   async show(req, res) {
+    const { userId } = req;
     const { id } = req.params;
 
+    const loggedFriendList = await Friend.findOne({ user_id: userId });
+    const targetFriendList = await Friend.findOne({ user_id: id });
+
     const user = await User.findByPk(id, {
+      attributes: {
+        exclude: ['password_hash', 'createdAt', 'updatedAt'],
+      },
       include: [
         {
           association: 'avatar',
@@ -54,6 +62,13 @@ class UserController {
     if (!user) {
       return res.status(404).json({ error: 'User not found.' });
     }
+
+    user.dataValues.friend_status = await user.checkFriendStatus(
+      loggedFriendList,
+      targetFriendList,
+      userId,
+      id
+    );
 
     return res.status(200).json(user);
   }

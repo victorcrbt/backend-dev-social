@@ -2,6 +2,14 @@ import Friend from '../schemas/Friend';
 import User from '../models/User';
 
 class FriendController {
+  async index(req, res) {
+    const { user_id } = req.query;
+
+    const friends = await Friend.findOne({ user_id });
+
+    return res.status(200).json(friends);
+  }
+
   async store(req, res) {
     const loggedUser = req.userId;
     const targetUser = Number(req.params.id);

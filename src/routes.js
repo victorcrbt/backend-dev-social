@@ -28,6 +28,7 @@ routes.get('/users/:id', UserController.show);
 routes.put('/users', UserController.update);
 routes.delete('/users', UserController.delete);
 
+routes.get('/friends', FriendController.index);
 routes.post('/users/:id/friend', FriendController.store);
 routes.delete('/users/:id/unfriend', FriendController.delete);
 
