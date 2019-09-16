@@ -9,7 +9,7 @@ class Avatar extends Model {
         url: {
           type: Sequelize.VIRTUAL,
           get() {
-            return `http://localhost:3333/static/avatars/${this.path}`;
+            return `${process.env.APP_URL}/static/avatars/${this.path}`;
           },
         },
       },
