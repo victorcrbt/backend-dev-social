@@ -86,7 +86,7 @@ class UserController {
       where: { phone: req.body.phone },
     });
 
-    if (phoneAlreadyUsed) {
+    if (req.body.phone !== '' && phoneAlreadyUsed) {
       return res
         .status(400)
         .json({ error: 'The phone number is already used.' });
@@ -118,7 +118,7 @@ class UserController {
       }
     }
 
-    if (phone && phone !== user.phone) {
+    if (phone !== '' && phone && phone !== user.phone) {
       const phoneAlreadyUsed = await User.findOne({ where: { phone } });
 
       if (phoneAlreadyUsed) {
