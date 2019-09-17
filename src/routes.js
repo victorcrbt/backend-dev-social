@@ -11,6 +11,7 @@ import AvatarController from './app/controllers/AvatarController';
 import PostController from './app/controllers/PostController';
 import LikeController from './app/controllers/LikeController';
 import CommentController from './app/controllers/CommentController';
+import MessageController from './app/controllers/MessageController';
 
 const routes = new Router();
 const avatarUpload = multer(avatarUploadConfig);
@@ -44,6 +45,9 @@ routes.delete('/posts/:postId/dislike', LikeController.delete);
 routes.post('/posts/:postId/comment', CommentController.store);
 routes.put('/comments/:commentId', CommentController.update);
 routes.delete('/comments/:commentId', CommentController.delete);
+
+routes.post('/messages', MessageController.store);
+routes.get('/messages', MessageController.index);
 
 routes.post('/avatars', avatarUpload.single('file'), AvatarController.store);
 routes.post('/images', imageUpload.single('file'), AvatarController.store);

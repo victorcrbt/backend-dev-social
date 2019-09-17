@@ -4,13 +4,15 @@ import express from 'express';
 import cors from 'cors';
 import Youch from 'youch';
 import { resolve } from 'path';
+import { createServer } from 'http';
 
 import './database';
 import routes from './routes';
 
 class App {
   constructor() {
-    this.server = express();
+    this.app = express();
+    this.server = createServer(this.app);
 
     this.middlewares();
     this.routes();
@@ -18,20 +20,20 @@ class App {
   }
 
   middlewares() {
-    this.server.use(cors());
-    this.server.use(express.json());
-    this.server.use(
+    this.app.use(cors());
+    this.app.use(express.json());
+    this.app.use(
       '/static/avatars',
       express.static(resolve(__dirname, '..', 'temp', 'avatars'))
     );
   }
 
   routes() {
-    this.server.use(routes);
+    this.app.use(routes);
   }
 
   exceptionHandler() {
-    this.server.use(async (err, req, res, next) => {
+    this.app.use(async (err, req, res, next) => {
       if (process.env.NODE_ENV === 'development') {
         const errors = await new Youch(err, req).toJSON();
 
