@@ -29,6 +29,7 @@ class Database {
     this.mongoConnection = mongoose.connect(process.env.DB_URI, {
       useNewUrlParser: true,
       useCreateIndex: true,
+      useFindAndModify: false,
     });
   }
 }
