@@ -22,7 +22,7 @@ class MessageController {
       const message = await Message.create({ sender_id, receiver_id, content });
 
       if (loggedSocket) {
-        req.socket.to(loggedSocket.socket_id).emit('messageSent', message);
+	req.socket.to(loggedSocket.socket_id).emit('messageSent', message);
       }
 
       if (targetSocket) {
@@ -52,7 +52,8 @@ class MessageController {
 
       return res.status(200).json(messages);
     } catch (err) {
-      return res.status(500).json({ error: err.message });
+	console.log(err);
+	return res.status(500).json({ error: err.message });
     }
   }
 }
