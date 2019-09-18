@@ -3,7 +3,7 @@ import User from '../models/User';
 
 class FriendController {
   async index(req, res) {
-    const { user_id } = req.query;
+    const { userId: user_id } = req;
 
     const friends = await Friend.findOne({ user_id });
 

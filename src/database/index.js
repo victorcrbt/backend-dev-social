@@ -7,8 +7,9 @@ import User from '../app/models/User';
 import Avatar from '../app/models/Avatar';
 import Post from '../app/models/Post';
 import Comment from '../app/models/Comment';
+import Message from '../app/models/Message';
 
-const models = [User, Avatar, Post, Comment];
+const models = [User, Avatar, Post, Comment, Message];
 
 class Database {
   constructor() {
@@ -28,6 +29,7 @@ class Database {
     this.mongoConnection = mongoose.connect(process.env.DB_URI, {
       useNewUrlParser: true,
       useCreateIndex: true,
+      useFindAndModify: false,
     });
   }
 }
