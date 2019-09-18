@@ -34,6 +34,10 @@ class App {
         { socket_id: socket.id },
         { upsert: true }
       );
+
+      socket.on('disconnect', async () => {
+        await Socket.findOneAndDelete({ user_id });
+      });
     });
   }
 
