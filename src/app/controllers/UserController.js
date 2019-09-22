@@ -74,6 +74,9 @@ class UserController {
   }
 
   async store(req, res) {
+    if (req.body.phone === '' || req.body.phone === undefined)
+      req.body.phone = null;
+
     const emailAlreadyUsed = await User.findOne({
       where: { email: req.body.email },
     });
@@ -86,7 +89,7 @@ class UserController {
       where: { phone: req.body.phone },
     });
 
-    if (req.body.phone !== '' && phoneAlreadyUsed) {
+    if (req.body.phone !== '' && req.body.phone !== null && phoneAlreadyUsed) {
       return res
         .status(400)
         .json({ error: 'The phone number is already used.' });
