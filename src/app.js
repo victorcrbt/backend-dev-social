@@ -26,9 +26,9 @@ class App {
   websocket(server) {
     this.socket = io(server);
 
-    this.socket.on('connect', async (socket, err) => {  
-	const { user_id } = socket.handshake.query;
-      
+    this.socket.on('connect', async socket => {
+      const { user_id } = socket.handshake.query;
+
       await Socket.findOneAndUpdate(
         { user_id },
         { socket_id: socket.id },
@@ -42,13 +42,12 @@ class App {
   }
 
   middlewares() {
-      this.app.use(cors());
-      this.app.use((req, res, next) => {
-      req.socket = this.socket;
+    this.app.use(cors());
+    this.app.use((req, res, next) => {
+      req.io = this.socket;
 
       next();
     });
-
     this.app.use(express.json());
     this.app.use(
       '/static/avatars',
